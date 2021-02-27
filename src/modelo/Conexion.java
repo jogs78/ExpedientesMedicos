@@ -22,12 +22,12 @@ public class Conexion {
       
     public Connection Conectar(){
         try{
-            String a;
+            
             //Class.forName("com.mysql.jdbc.Driver");
             Class.forName("com.mysql.cj.jdbc.Driver");
             //
             conec= (Connection) DriverManager.getConnection(url, user, pass);
-            a = "4";
+            
         }
         catch(ClassNotFoundException | SQLException e){
               JOptionPane.showMessageDialog(null, "Error de en conexion de base de datos:" + e.getMessage() );

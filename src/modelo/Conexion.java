@@ -30,7 +30,7 @@ public class Conexion {
             a = "4";
         }
         catch(ClassNotFoundException | SQLException e){
-              JOptionPane.showMessageDialog(null, "Error de algo:" + e.getMessage() );
+              JOptionPane.showMessageDialog(null, "Error de en conexion de base de datos:" + e.getMessage() );
        
         }
     

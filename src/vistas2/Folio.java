@@ -27,7 +27,7 @@ public class Folio extends javax.swing.JInternalFrame {
      * Creates new form Folio
      */
     int idF,saldo; 
-    String nomCliente,fechaCita;  
+    String nomCliente,fechaCita;      
     CitasDao dao = new CitasDao();
     EntidadCita ep = new EntidadCita();
     
@@ -60,7 +60,7 @@ public class Folio extends javax.swing.JInternalFrame {
            ob[1]=fechaCita;
            ob[2]=TC;
            ob[3]=saldo;
-           //dao.add(ob);  
+           dao.add(ob);  
           
         }
         } catch (Exception e) {JOptionPane.showMessageDialog(this,"Favor de Checar Campos");
@@ -265,11 +265,9 @@ public class Folio extends javax.swing.JInternalFrame {
     private void btnCrearCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearCitaActionPerformed
         // TODO add your handling code here:
         try {
-        Agregar();
-        
+        Agregar();        
         informacionCita infC = new informacionCita();
         Inicio.escritorio.add(infC);
-        
         
            int idPac=Integer.parseInt(txtIdPaciente.getText().toString());             
            infC.idClien=idPac;

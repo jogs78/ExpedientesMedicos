@@ -7,7 +7,13 @@ package vistas2;
 
 import ControladorCliente.CitasDao;
 import ControladorCliente.ClienteDao;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modelo.EntidadCita;
+import modelo.EntidadTipoCons;
+import static vistas2.Clientes.tablaCitas;
+
 
 /**
  *
@@ -19,11 +25,41 @@ public class EliminarCita extends javax.swing.JInternalFrame {
     ClienteDao dao = new ClienteDao();
     int folioElim;
     int idCli;
+    DefaultTableModel modeloCitas = new DefaultTableModel();
     public EliminarCita() {
         initComponents();
         identificar();
     }
     //resivir el id o folio y identifacarlo
+    void listarcitas(){
+        int tps;//tipo consulta
+                int id=folioElim;
+                EntidadTipoCons etp;
+                String ntps;
+                 Clientes c = new Clientes();               
+                 List<EntidadCita> lista =cDao.listarCitas(id);
+                 modeloCitas =(DefaultTableModel)tablaCitas.getModel();        
+                 Object[]ob = new Object[10];
+                 for(int i = 0;i<lista.size();i++){
+                 ob[0]=lista.get(i).getFolio();
+                 ob[1]=lista.get(i).getIdCliente();
+                 ob[2]=lista.get(i).getFechaCita();
+                 tps=lista.get(i).getTipoConsulta();
+                 etp=cDao.obtenerNomTipoCons(tps);
+                 ntps=etp.getNombreConsulta();
+                 ob[3]=ntps;
+                 ob[4]=lista.get(i).getSaldo();
+                 modeloCitas.addRow(ob);
+                }
+                 tablaCitas.setModel(modeloCitas);
+    
+    }
+    void limpiarTablaCitas(){
+        for(int i = 0;i<modeloCitas.getRowCount();i++ ){
+        modeloCitas.removeRow(i);
+        i=i-1;
+        }
+    }
     void identificar(){
         if(folioElim!=0){lbIndicador.setText("FOLIO DE CITA: ");}
         if(idCli!=0){lbIndicador.setText("ID CLIENTE: ");}
@@ -32,8 +68,9 @@ public class EliminarCita extends javax.swing.JInternalFrame {
         if(txtFolio.getText().equals("")){JOptionPane.showMessageDialog(this, "la casilla del folio esta vacia");
         }
         else{
-           cDao.eliminar(folioElim);
-           JOptionPane.showMessageDialog(this, "SE ELIMINO EL REGISTRO DE CITA"+folioElim);
+           cDao.eliminar(folioElim);           
+           JOptionPane.showMessageDialog(this, "SE ELIMINO EL REGISTRO DE CITA"+folioElim);          
+           
         }
         dispose();
     }
@@ -42,7 +79,10 @@ public class EliminarCita extends javax.swing.JInternalFrame {
         }
         else{
            dao.eliminar(idCli);
+          
+           limpiarTablaCitas();
            JOptionPane.showMessageDialog(this, "SE ELIMINO EL REGISTRO DEL ClIENTE"+idCli);
+        
         }
         dispose();
     }
@@ -58,7 +98,7 @@ public class EliminarCita extends javax.swing.JInternalFrame {
         lbIndicador = new javax.swing.JLabel();
         txtFolio = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnSi = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setClosable(true);
@@ -88,10 +128,10 @@ public class EliminarCita extends javax.swing.JInternalFrame {
         jLabel3.setFont(new java.awt.Font("Marion", 1, 16)); // NOI18N
         jLabel3.setText("¿ESTA SEGURO QUE DESEA ELIMINAR LOS REGISTROS?");
 
-        jButton1.setText("SI");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnSi.setText("SI");
+        btnSi.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                btnSiMouseClicked(evt);
             }
         });
 
@@ -115,7 +155,7 @@ public class EliminarCita extends javax.swing.JInternalFrame {
                         .addComponent(txtFolio, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(111, 111, 111)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSi, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(47, 47, 47)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
@@ -134,7 +174,7 @@ public class EliminarCita extends javax.swing.JInternalFrame {
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(btnSi)
                     .addComponent(jButton2))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
@@ -142,10 +182,10 @@ public class EliminarCita extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void btnSiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSiMouseClicked
         if(folioElim!=0){eliminarCita();}
         if(idCli!=0){eliminarCliente();}
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_btnSiMouseClicked
 
     private void formInternalFrameActivated(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameActivated
         
@@ -163,7 +203,7 @@ public class EliminarCita extends javax.swing.JInternalFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnSi;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel lbIndicador;

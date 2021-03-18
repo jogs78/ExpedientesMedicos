@@ -52,7 +52,7 @@ public class ClienteDao implements CRUD {
     @Override
     public int add(Object[] o) {//se agrega en inicio
         int r=0;
-        String sql="INSERT INTO datosCliente (nombreCliente,apellidoPat,apellidoMAt, domicilio, contacto, fechaRegistro, fechaInicia, fechaTermina,edad,sexo,saldo) values (?,?,?,?,?,?,?,?,?,?,?) ";
+        String sql="INSERT INTO datosCliente (nombreCliente,apellidoPat,apellidoMAt, domicilio, contacto, fechaRegistro, fechaInicia, fechaTermina,edad,sexo) values (?,?,?,?,?,?,?,?,?,?) ";
         try{
             con=cn.Conectar();
             ps=con.prepareStatement(sql);
@@ -66,7 +66,6 @@ public class ClienteDao implements CRUD {
             ps.setObject(8, o[7]);
             ps.setObject(9, o[8]);
             ps.setObject(10, o[9]);
-            ps.setObject(11, o[10]);
             r=ps.executeUpdate(); 
         }
         catch(Exception e){}
@@ -121,9 +120,18 @@ public class ClienteDao implements CRUD {
             ps.setInt(1, idCliente);
             rs=ps.executeQuery();
             while(rs.next()){
+                ec.setIdCliente(rs.getInt(1));
                 ec.setNombreCliente(rs.getString(2));
                 ec.setApellidoPat(rs.getString(3));
                 ec.setApellidoMat(rs.getString(4));
+                ec.setDomicilio(rs.getString(5));
+                 ec.setContacto(rs.getString(6));
+                 ec.setFechaRegistro(rs.getString(7));
+                 ec.setFechaInicia(rs.getString(8));
+                 ec.setFechaTermina(rs.getString(9));
+                 ec.setEdad(rs.getInt(10));
+                 ec.setSexo(rs.getString(11));
+                
             }
         }
         catch(Exception e){}return ec;
@@ -138,13 +146,27 @@ public class ClienteDao implements CRUD {
             ps=con.prepareStatement(sql);
             ps.setString(1, contacto);
             rs=ps.executeQuery();
-            while(rs.next()){
-                
+            while(rs.next()){             
                 ec.setIdCliente(rs.getInt(1));
             }
         }
         catch(Exception e){}return ec;
     }
+    public EntidadCliente obtenerinfoNombre (String nombre) {
+        EntidadCliente ec = new EntidadCliente();
+        String sql="SELECT idCliente FROM datosCliente where nombreCliente=?";
+        try{
+            con=cn.Conectar();
+            ps=con.prepareStatement(sql);
+            ps.setString(1, nombre);
+            rs=ps.executeQuery();
+            while(rs.next()){             
+                ec.setIdCliente(rs.getInt(1));
+            }
+        }
+        catch(Exception e){}return ec;
+    }
+    
     public List listarUnCliente(int id) {
         List<EntidadCliente> lista = new ArrayList<>();
         String sql="SELECT * FROM datosCliente where idCliente=?";
@@ -157,6 +179,7 @@ public class ClienteDao implements CRUD {
                 EntidadCliente ec = new EntidadCliente();
                  ec.setIdCliente(rs.getInt(1));
                  ec.setNombreCliente(rs.getString(2));
+                 
                  ec.setDomicilio(rs.getString(3));
                  ec.setContacto(rs.getString(4));
                  ec.setFechaRegistro(rs.getString(5));

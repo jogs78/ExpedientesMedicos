@@ -18,19 +18,19 @@ public class Conexion {
     
     String url="jdbc:mysql://127.0.0.1:3306/ExpedientesMedicos";
     String user="root";
-    String pass="paso";
+    String pass="";
       
     public Connection Conectar(){
         try{
             
-            //Class.forName("com.mysql.jdbc.Driver");
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver");
+            //Class.forName("com.mysql.cj.jdbc.Driver");
             //
             conec= (Connection) DriverManager.getConnection(url, user, pass);
             
         }
         catch(ClassNotFoundException | SQLException e){
-              JOptionPane.showMessageDialog(null, "Error de en conexion de base de datos:" + e.getMessage() );
+              JOptionPane.showMessageDialog(null, "Error de en conexion: " + e.getMessage() );
        
         }
     

@@ -8,9 +8,13 @@ package vistas2;
 import ControladorCliente.CitasDao;
 import ControladorCliente.ClienteDao;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JInternalFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.table.DefaultTableModel;
 import modelo.EntidadCita;
 import modelo.EntidadCliente;
@@ -32,6 +36,8 @@ public class Clientes extends javax.swing.JInternalFrame {
     public Clientes() {
         initComponents();
         listarCliente();
+        popupTable();
+        popupTable2();
     }
 
     /**
@@ -50,23 +56,12 @@ public class Clientes extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         contacto = new javax.swing.JRadioButton();
-        idC = new javax.swing.JRadioButton();
         nombre = new javax.swing.JRadioButton();
         txtBuscar = new javax.swing.JTextField();
         btnBuscar = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        Eliminar = new javax.swing.JButton();
-        btnVerCitas = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        txtId = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaCitas = new javax.swing.JTable();
-        btnVerReg = new javax.swing.JButton();
         listar = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        txtFolio = new javax.swing.JTextField();
-        Eliminar1 = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
 
         setClosable(true);
         setIconifiable(true);
@@ -78,9 +73,17 @@ public class Clientes extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "ID", "Nombre del paciente", "Domicilio", "Telefono", "Fecha de registro", "inicia ", "termina", "Edad", "Sexo"
+                "ID", "Nombre del paciente", "Apellido Pat", "Apellido Mat", "Domicilio", "Telefono", "Fecha de registro", "inicia ", "termina", "Edad", "Sexo"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, true, true, false, true, true, true, true, true, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tablaCliente.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tablaClienteMouseClicked(evt);
@@ -88,19 +91,21 @@ public class Clientes extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tablaCliente);
         if (tablaCliente.getColumnModel().getColumnCount() > 0) {
-            tablaCliente.getColumnModel().getColumn(0).setMaxWidth(60);
-            tablaCliente.getColumnModel().getColumn(1).setMaxWidth(430);
-            tablaCliente.getColumnModel().getColumn(2).setMaxWidth(430);
-            tablaCliente.getColumnModel().getColumn(3).setMaxWidth(130);
-            tablaCliente.getColumnModel().getColumn(4).setMaxWidth(170);
-            tablaCliente.getColumnModel().getColumn(5).setMaxWidth(170);
-            tablaCliente.getColumnModel().getColumn(6).setMaxWidth(170);
-            tablaCliente.getColumnModel().getColumn(7).setMaxWidth(60);
-            tablaCliente.getColumnModel().getColumn(8).setMaxWidth(90);
+            tablaCliente.getColumnModel().getColumn(0).setMaxWidth(40);
+            tablaCliente.getColumnModel().getColumn(1).setMaxWidth(200);
+            tablaCliente.getColumnModel().getColumn(2).setMaxWidth(110);
+            tablaCliente.getColumnModel().getColumn(3).setMaxWidth(110);
+            tablaCliente.getColumnModel().getColumn(4).setMaxWidth(390);
+            tablaCliente.getColumnModel().getColumn(5).setMaxWidth(130);
+            tablaCliente.getColumnModel().getColumn(6).setMaxWidth(160);
+            tablaCliente.getColumnModel().getColumn(7).setMaxWidth(160);
+            tablaCliente.getColumnModel().getColumn(8).setMaxWidth(160);
+            tablaCliente.getColumnModel().getColumn(9).setMaxWidth(50);
+            tablaCliente.getColumnModel().getColumn(10).setMaxWidth(80);
         }
 
         escrito.add(jScrollPane1);
-        jScrollPane1.setBounds(10, 260, 1200, 320);
+        jScrollPane1.setBounds(10, 180, 1250, 320);
 
         jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 3, true));
 
@@ -109,9 +114,6 @@ public class Clientes extends javax.swing.JInternalFrame {
 
         buttonGroup1.add(contacto);
         contacto.setText("CONTACTO");
-
-        buttonGroup1.add(idC);
-        idC.setText("ID CLIENTE");
 
         buttonGroup1.add(nombre);
         nombre.setText("NOMBRE");
@@ -128,100 +130,40 @@ public class Clientes extends javax.swing.JInternalFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(contacto)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(idC)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(nombre)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnBuscar))))
+                        .addGap(37, 37, 37)
+                        .addComponent(contacto)
+                        .addGap(18, 18, 18)
+                        .addComponent(nombre))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnBuscar)))))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnBuscar)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(contacto)
-                            .addComponent(idC)
-                            .addComponent(nombre))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(contacto)
+                    .addComponent(nombre))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscar))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         escrito.add(jPanel1);
-        jPanel1.setBounds(10, 20, 464, 110);
-
-        jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
-
-        Eliminar.setBackground(new java.awt.Color(255, 51, 51));
-        Eliminar.setForeground(new java.awt.Color(255, 255, 255));
-        Eliminar.setText("ELIMINAR");
-        Eliminar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                EliminarMouseClicked(evt);
-            }
-        });
-
-        btnVerCitas.setBackground(new java.awt.Color(153, 153, 255));
-        btnVerCitas.setText("VER CITAS");
-        btnVerCitas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVerCitasActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setFont(new java.awt.Font("Marion", 1, 16)); // NOI18N
-        jLabel2.setText("ID DEL CLIENTE :");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(Eliminar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnVerCitas))
-                            .addComponent(jLabel2)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(68, 68, 68)
-                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(21, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Eliminar)
-                    .addComponent(btnVerCitas))
-                .addContainerGap())
-        );
-
-        escrito.add(jPanel2);
-        jPanel2.setBounds(480, 20, 249, 109);
+        jPanel1.setBounds(10, 20, 420, 110);
 
         tablaCitas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -244,16 +186,7 @@ public class Clientes extends javax.swing.JInternalFrame {
         }
 
         escrito.add(jScrollPane2);
-        jScrollPane2.setBounds(760, 10, 454, 130);
-
-        btnVerReg.setText("VER REGISTROS");
-        btnVerReg.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVerRegActionPerformed(evt);
-            }
-        });
-        escrito.add(btnVerReg);
-        btnVerReg.setBounds(900, 170, 150, 29);
+        jScrollPane2.setBounds(620, 20, 454, 130);
 
         listar.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         listar.setText("Listar");
@@ -265,39 +198,13 @@ public class Clientes extends javax.swing.JInternalFrame {
         escrito.add(listar);
         listar.setBounds(30, 140, 120, 29);
 
-        jLabel3.setFont(new java.awt.Font("Marion", 1, 16)); // NOI18N
-        jLabel3.setText("# F O L I O :");
-        escrito.add(jLabel3);
-        jLabel3.setBounds(640, 180, 100, 18);
-
-        txtFolio.setFont(new java.awt.Font("Lucida Sans Typewriter", 3, 17)); // NOI18N
-        escrito.add(txtFolio);
-        txtFolio.setBounds(740, 170, 120, 31);
-
-        Eliminar1.setBackground(new java.awt.Color(255, 51, 51));
-        Eliminar1.setForeground(new java.awt.Color(255, 255, 255));
-        Eliminar1.setText("ELIMINAR");
-        Eliminar1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Eliminar1MouseClicked(evt);
-            }
-        });
-        escrito.add(Eliminar1);
-        Eliminar1.setBounds(1080, 180, 104, 29);
-
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Boton para eliminar cita");
-        escrito.add(jLabel4);
-        jLabel4.setBounds(1060, 160, 160, 16);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(escrito, javax.swing.GroupLayout.PREFERRED_SIZE, 1228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addComponent(escrito, javax.swing.GroupLayout.DEFAULT_SIZE, 1251, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -310,9 +217,114 @@ public class Clientes extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void popupTable(){
+    JPopupMenu popup = new JPopupMenu();
+    JMenuItem menu = new JMenuItem("     Eliminar Cliente   ");
+    
+    menu.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int fila1 = tablaCliente.getSelectedRow();
+        if(fila1==-1){JOptionPane.showMessageDialog(null, "debe selecionar una fila de la tabla de citas"); }
+        else{
+            
+          int idClien= Integer.parseInt(tablaCliente.getValueAt(fila1, 0).toString());
+          
+          
+            EliminarCita ec = new EliminarCita();
+            ec.idCli=idClien;
+            centrarVentanas(ec);
+          
+         
+          
+        }
+            
+            limpiarTabla();
+            listarCliente();
+           
+         }
+    });
+    popup.add(menu);
+    tablaCliente.setComponentPopupMenu(popup);   
+    }
+    public void popupTable2(){
+    JPopupMenu popup = new JPopupMenu();
+    JMenuItem menu = new JMenuItem(" Eliminar registros de cita ");
+    JMenuItem menu2 = new JMenuItem(" Ver registros de cita ");
+    
+    menu.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int fila1 = tablaCitas.getSelectedRow();
+        if(fila1==-1){JOptionPane.showMessageDialog(null, "debe selecionar una fila de la tabla de citas"); }
+        else{
+            int folioC= Integer.parseInt(tablaCitas.getValueAt(fila1, 0).toString());
+            EliminarCita ec = new EliminarCita();
+            ec.folioElim=folioC;
+            JOptionPane.showMessageDialog(null, "folio cita:"+folioC);
+            centrarVentanas(ec);
+        }  
+         }
+    });
+    
+    menu2.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int fila1 = tablaCitas.getSelectedRow();
+        if(fila1==-1){JOptionPane.showMessageDialog(null, "debe selecionar una fila de la tabla de citas"); }
+        else{
+            
+          int folioC= Integer.parseInt(tablaCitas.getValueAt(fila1, 0).toString());
+          entC=cDao.obtenerDatosCita(folioC);//obtenemos el id del cliente por medio del folio que esta en txtFolio
+          int idCl=entC.getIdCliente();//idCliente           
+          Cuentas cu = new Cuentas();
+          cu.folio=folioC;
+          cu.idCliente=idCl;
+          cu.setVisible(true);
+          dispose();      
+        }
+            limpiarTablaCitas();
+        }
+    } );    
+    popup.add(menu);
+    popup.add(menu2);
+    tablaCitas.setComponentPopupMenu(popup);   
+    }
     void listarCliente(){
         try{
-        List<EntidadCliente> lista =dao.listar();
+         
+        List<EntidadCliente> lista =dao.listar();//metodo tipo list para traer todos los registros
+        modeloCliente =(DefaultTableModel)tablaCliente.getModel();        
+        Object[]ob = new Object[11];
+        for(int i = 0;i<lista.size();i++){
+            ob[0]=lista.get(i).getIdCliente();
+            ob[1]=lista.get(i).getNombreCliente();
+            ob[2]=lista.get(i).getApellidoPat();
+            ob[3]=lista.get(i).getApellidoMat();
+            ob[4]=lista.get(i).getDomicilio();
+            ob[5]=lista.get(i).getContacto();
+            ob[6]=lista.get(i).getFechaRegistro();
+            ob[7]=lista.get(i).getFechaInicia();
+            ob[8]=lista.get(i).getFechaTermina();
+            ob[9]=lista.get(i).getEdad();
+            ob[10]=lista.get(i).getSexo();
+            
+            modeloCliente.addRow(ob);
+        }
+        tablaCliente.setModel(modeloCliente);
+        }
+        catch(Exception e){ JOptionPane.showMessageDialog(this, "error en listar clientes"+e.getMessage()); }        
+    } 
+    void buscar(){
+        
+        if(nombre.isSelected()==true){
+        String nombre=txtBuscar.getText();
+        try{    
+            EntidadCliente ec=dao.obtenerinfoNombre(nombre);
+            int idCLI=ec.getIdCliente();
+            
+            JOptionPane.showMessageDialog(this, "id"+idCLI);
+        List<EntidadCliente> lista =dao.listarUnCliente(idCLI);       
         modeloCliente =(DefaultTableModel)tablaCliente.getModel();        
         Object[]ob = new Object[10];
         for(int i = 0;i<lista.size();i++){
@@ -330,10 +342,10 @@ public class Clientes extends javax.swing.JInternalFrame {
         }
         tablaCliente.setModel(modeloCliente);
         }
-        catch(Exception e){ JOptionPane.showMessageDialog(this, "error en listar"+e.getMessage()); }
+        catch(Exception e){ JOptionPane.showMessageDialog(this, "error en buscar clientes"+e.getMessage()); }
+        }
         
-    }
-    void buscar(){
+        
         if(contacto.isSelected()==true){
         String contact=txtBuscar.getText();
         try{    
@@ -359,34 +371,10 @@ public class Clientes extends javax.swing.JInternalFrame {
         }
         tablaCliente.setModel(modeloCliente);
         }
-        catch(Exception e){ JOptionPane.showMessageDialog(this, "error en listar"+e.getMessage()); }
+        catch(Exception e){ JOptionPane.showMessageDialog(this, "error en buscar clientes"+e.getMessage()); }
         }
     }
-    void verCitas(){
-        int tps;//tipo consulta
-        EntidadTipoCons etp;
-        String ntps;
-        try{
-            int id =Integer.parseInt(txtId.getText().toString());
-        List<EntidadCita> lista =cDao.listarCitas(id);
-        modeloCitas =(DefaultTableModel)tablaCitas.getModel();        
-        Object[]ob = new Object[10];
-        for(int i = 0;i<lista.size();i++){
-            ob[0]=lista.get(i).getFolio();
-            ob[1]=lista.get(i).getIdCliente();
-            ob[2]=lista.get(i).getFechaCita();
-             tps=lista.get(i).getTipoConsulta();
-           
-            etp=cDao.obtenerNomTipoCons(tps);
-            ntps=etp.getNombreConsulta();
-            ob[3]=ntps;
-            ob[4]=lista.get(i).getSaldo();
-            modeloCitas.addRow(ob);
-        }
-        tablaCitas.setModel(modeloCitas);
-        }
-        catch(Exception e){ JOptionPane.showMessageDialog(this, "error en listar citas Verifique que el id este en la casilla"+e.getMessage()); }
-    }
+    
      void centrarVentanas(JInternalFrame frame){
         escrito.add(frame);
         Dimension dimension=escrito.getSize();
@@ -408,24 +396,10 @@ public class Clientes extends javax.swing.JInternalFrame {
         i=i-1;
         }
     }
-    private void tablaClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaClienteMouseClicked
-        // TODO add your handling code here:
-        int fila = tablaCliente.getSelectedRow();
-        if(fila==-1){JOptionPane.showMessageDialog(this, "debe selecionar una fila"); }
-        else{
-            try {
-                id = Integer.parseInt(tablaCliente.getValueAt(fila, 0).toString());
-                
-                txtId.setText(""+id);
-            } catch (Exception e) {
-            }
-
-        }
-    }//GEN-LAST:event_tablaClienteMouseClicked
-
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         limpiarTabla();
         buscar();
+        txtBuscar.setText("");
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void listarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listarActionPerformed
@@ -433,86 +407,59 @@ public class Clientes extends javax.swing.JInternalFrame {
         listarCliente();
     }//GEN-LAST:event_listarActionPerformed
 
-    private void btnVerCitasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerCitasActionPerformed
-        limpiarTablaCitas();
-        verCitas();
-    }//GEN-LAST:event_btnVerCitasActionPerformed
-
     private void tablaCitasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaCitasMouseClicked
-        int fila1 = tablaCitas.getSelectedRow();
-        if(fila1==-1){JOptionPane.showMessageDialog(this, "debe selecionar una fila"); }
+        
+    }//GEN-LAST:event_tablaCitasMouseClicked
+
+    private void tablaClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaClienteMouseClicked
+        // TODO add your handling code here:
+        limpiarTablaCitas();
+        int fila = tablaCliente.getSelectedRow();
+        if(fila==-1){JOptionPane.showMessageDialog(this, "debe selecionar una fila"); }
         else{
             try {
-               int folio= Integer.parseInt(tablaCitas.getValueAt(fila1, 0).toString());
-                
-                txtFolio.setText(""+folio);
-            } catch (Exception e) {
+                id = Integer.parseInt(tablaCliente.getValueAt(fila, 0).toString());
+
+                int tps;//tipo consulta
+                EntidadTipoCons etp;
+                String ntps;
+                               
+                 List<EntidadCita> lista =cDao.listarCitas(id);
+                 modeloCitas =(DefaultTableModel)tablaCitas.getModel();        
+                 Object[]ob = new Object[10];
+                 for(int i = 0;i<lista.size();i++){
+                 ob[0]=lista.get(i).getFolio();
+                 ob[1]=lista.get(i).getIdCliente();
+                 ob[2]=lista.get(i).getFechaCita();
+                 tps=lista.get(i).getTipoConsulta();
+                 etp=cDao.obtenerNomTipoCons(tps);
+                 ntps=etp.getNombreConsulta();
+                 ob[3]=ntps;
+                 ob[4]=lista.get(i).getSaldo();
+                 modeloCitas.addRow(ob);
+                }
+                 tablaCitas.setModel(modeloCitas);
+               
+            } catch (Exception e) { JOptionPane.showMessageDialog(this, "ERROR EN LISTAR CITAS"+e.getMessage()); 
             }
 
         }
-    }//GEN-LAST:event_tablaCitasMouseClicked
-
-    private void btnVerRegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerRegActionPerformed
-        if(txtFolio.getText().equals("")){JOptionPane.showMessageDialog(this, "la casilla del folio esta vacia selecciona una fila en la tabla de citas");}
-        else{
-        int folioC=Integer.parseInt(txtFolio.getText().toString());
-        entC=cDao.obtenerDatosCita(folioC);//obtenemos el id del cliente por medio del folio que esta en txtFolio
-        int idCl=entC.getIdCliente();//idCliente 
-        JOptionPane.showMessageDialog(this, "idCl"+idCl);
-        Cuentas cu = new Cuentas();
-        cu.folio=folioC;
-        cu.idCliente=idCl;
-        cu.setVisible(true);
-        dispose();
-        dispose();
-        }
-    }//GEN-LAST:event_btnVerRegActionPerformed
-
-    private void Eliminar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Eliminar1MouseClicked
-        if(txtFolio.getText().equals("")){JOptionPane.showMessageDialog(this, "la casilla del folio esta vacia selecciona una fila en la tabla de citas");}
-        else{
-        int folioC=Integer.parseInt(txtFolio.getText().toString());
-        EliminarCita ec = new EliminarCita();
-        ec.folioElim=folioC;
-            centrarVentanas(ec);
-        }
-    }//GEN-LAST:event_Eliminar1MouseClicked
-
-    private void EliminarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EliminarMouseClicked
-        if(txtId.getText().equals("")){JOptionPane.showMessageDialog(this, "Casilla ID CLIENTE esta vacia selecciona una fila en la tabla de CLIENTES");}
-        else{
-        int idc=Integer.parseInt(txtId.getText().toString());
-        EliminarCita ec = new EliminarCita();
-        ec.idCli=idc;
-            centrarVentanas(ec);
-        }
-    }//GEN-LAST:event_EliminarMouseClicked
+    }//GEN-LAST:event_tablaClienteMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Eliminar;
-    private javax.swing.JButton Eliminar1;
     private javax.swing.JButton btnBuscar;
-    private javax.swing.JButton btnVerCitas;
-    private javax.swing.JButton btnVerReg;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JRadioButton contacto;
     private javax.swing.JDesktopPane escrito;
-    private javax.swing.JRadioButton idC;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton listar;
     private javax.swing.JRadioButton nombre;
-    private javax.swing.JTable tablaCitas;
+    public static javax.swing.JTable tablaCitas;
     private javax.swing.JTable tablaCliente;
     private javax.swing.JTextField txtBuscar;
-    private javax.swing.JTextField txtFolio;
-    private javax.swing.JTextField txtId;
     // End of variables declaration//GEN-END:variables
 }

@@ -346,7 +346,6 @@ public class Cuentas extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         lbPaciente = new javax.swing.JLabel();
         jRadioButton1 = new javax.swing.JRadioButton();
-        jButton2 = new javax.swing.JButton();
         jScrollPane6 = new javax.swing.JScrollPane();
         cita_antecedentes = new javax.swing.JTable();
         jScrollPane7 = new javax.swing.JScrollPane();
@@ -617,9 +616,9 @@ public class Cuentas extends javax.swing.JFrame {
         jButton1.setBounds(1060, 10, 180, 52);
 
         lbFolio.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        lbFolio.setText("000000000");
+        lbFolio.setText("0");
         jDesktopPane1.add(lbFolio);
-        lbFolio.setBounds(310, 20, 108, 22);
+        lbFolio.setBounds(310, 20, 120, 20);
 
         jLabel9.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         jLabel9.setText("FOLIO:");
@@ -643,15 +642,6 @@ public class Cuentas extends javax.swing.JFrame {
         });
         jDesktopPane1.add(jRadioButton1);
         jRadioButton1.setBounds(1050, 70, 180, 23);
-
-        jButton2.setText("ver Historial");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-        jDesktopPane1.add(jButton2);
-        jButton2.setBounds(10, 50, 120, 29);
 
         cita_antecedentes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -819,6 +809,7 @@ public class Cuentas extends javax.swing.JFrame {
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         
         int tps;
+        
         try {         
             EntidadTipoCons etp;
             EntidadCita cita = dao.obtenerDatos(idCliente);            
@@ -834,19 +825,17 @@ public class Cuentas extends javax.swing.JFrame {
             lbIdCliente.setText("ID CLIENTE: "+idCliente);
             lbFechaCita.setText("FECHA DE CITA: "+cit.getFechaCita());
             lbTipoConsulta.setText("TIPO CONSULTA: "+tpcs);
+            int f = Integer.parseInt(lbFolio.getText());
+            if(f!=0){
+                listarInformacionCita();   
+                txtSaldo.setText(Integer.toString(suma()));
+            }
+            
             
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,"Erro Activated winds");
         }
     }//GEN-LAST:event_formWindowActivated
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        listarInformacionCita();
-        txtSaldo.setText(Integer.toString(suma()));
-        
-        
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         //boton final
@@ -948,7 +937,6 @@ public class Cuentas extends javax.swing.JFrame {
     private javax.swing.JTable cita_rx;
     private javax.swing.JTable diente_padecimiento;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

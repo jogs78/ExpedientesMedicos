@@ -5,7 +5,12 @@
  */
 package vistas2;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.EntidadInventario;
@@ -41,11 +46,13 @@ public class Inventario extends javax.swing.JInternalFrame {
     }
     
     void Agregar(){
-        String nombreProducto=txtNombreProducto.getText();
-        String codigo=txtCodigo.getText();
-        String existencia=txtExistencia.getText();
-        String fechaCaducidad=txtFechaCaducidad.getText();
-        if(txtNombreProducto.getText().equals("") || txtCodigo.getText().equals("")|| txtExistencia.getText().equals("") || txtFechaCaducidad.getText().equals("")){
+        try {
+            String nombreProducto=txtNombreProducto.getText();
+        String codigo=txtCodigo.getText();        
+        int existencia=Integer.parseInt(txtExistencia.getText());
+        Date fechaCaducidad=FechaCaducidad.getDate();
+        
+        if(txtNombreProducto.getText().equals("") || txtCodigo.getText().equals("")|| txtExistencia.getText().equals("") || FechaCaducidad.getDate().equals("")){
             JOptionPane.showMessageDialog(this,"Por Favor Llena todos los Campos que se le pide");
             txtNombreProducto.requestFocus();
            }
@@ -55,8 +62,12 @@ public class Inventario extends javax.swing.JInternalFrame {
            ob[1]=codigo;
            ob[2]=existencia;
            ob[3]=fechaCaducidad;
-           dao.add(ob);            
+           dao.add(ob); 
+            nuevo();
         }
+        } catch (Exception e) {JOptionPane.showMessageDialog(this, "ERROR AL AGREGAR... FAVOR DE CHECAR CAMPOS");
+        }
+        
     }
     
     void Actualizar(){
@@ -66,7 +77,7 @@ public class Inventario extends javax.swing.JInternalFrame {
         String nombreProducto=txtNombreProducto.getText();
         String codigo=txtCodigo.getText();      
         String existencia=txtExistencia.getText();
-        String fechaCaducidad=txtFechaCaducidad.getText();
+        Date fechaCaducidad=FechaCaducidad.getDate();
         Object[] obj = new Object[5];
         obj[0]=nombreProducto;
         obj[1]=codigo;
@@ -79,10 +90,12 @@ public class Inventario extends javax.swing.JInternalFrame {
     }
     void eliminar(){
         int fila =tablaProductos.getSelectedRow(); 
-        if(fila==-1){JOptionPane.showMessageDialog(this, "debe selecionar una fila");}
+        if(fila==-1){JOptionPane .showMessageDialog(this, "debe selecionar una fila");}
         else{
             int ids = Integer.parseInt(tablaProductos.getValueAt(fila,0).toString());            
            dao.eliminar(ids);
+            
+           
         }
     
     }
@@ -90,7 +103,7 @@ public class Inventario extends javax.swing.JInternalFrame {
         txtNombreProducto.setText("");
         txtCodigo.setText("");
         txtExistencia.setText("");  
-        txtFechaCaducidad.setText("");        
+        FechaCaducidad.setDate(new Date());        
     }
     void limpiarTabla(){
         for(int i = 0;i<modelo.getRowCount();i++ ){
@@ -118,14 +131,14 @@ public class Inventario extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         txtNombreProducto = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        txtFechaCaducidad = new javax.swing.JTextField();
         txtCodigo = new javax.swing.JTextField();
         btnAgregar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         txtExistencia = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        FechaCaducidad = new com.toedter.calendar.JDateChooser();
+        jButton5 = new javax.swing.JButton();
 
         setClosable(true);
         setResizable(true);
@@ -168,16 +181,16 @@ public class Inventario extends javax.swing.JInternalFrame {
             }
         });
 
+        jLabel4.setText("Existencia");
+
+        jLabel5.setText("FECHA DE CADUCIDAD");
+
         jButton5.setText("ACTUALIZAR");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
-
-        jLabel4.setText("Existencia");
-
-        jLabel5.setText("FECHA DE CADUCIDAD");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -186,39 +199,34 @@ public class Inventario extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel3)
+                        .addComponent(jLabel4)
+                        .addComponent(jLabel5))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(txtExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton5))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnAgregar))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(txtFechaCaducidad, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnEliminar)))))
+                            .addComponent(FechaCaducidad, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnAgregar)
+                            .addComponent(jButton5)
+                            .addComponent(btnEliminar)))
+                    .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap(23, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
@@ -229,10 +237,12 @@ public class Inventario extends javax.swing.JInternalFrame {
                     .addComponent(txtExistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton5))
                 .addGap(1, 1, 1)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txtFechaCaducidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEliminar)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(FechaCaducidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5)
+                        .addComponent(btnEliminar)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -242,16 +252,16 @@ public class Inventario extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(16, 16, 16)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel6))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 662, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -262,8 +272,8 @@ public class Inventario extends javax.swing.JInternalFrame {
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -274,7 +284,6 @@ public class Inventario extends javax.swing.JInternalFrame {
         Agregar();
         limpiarTabla();
         listar();
-        nuevo();
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
@@ -297,6 +306,8 @@ public class Inventario extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "debe selecionar una fila");
         }
         else{
+            try {
+
             //checar video su dni si es entero
             id = Integer.parseInt(tablaProductos.getValueAt(fila,0).toString());
             String nombreProducto= tablaProductos.getValueAt(fila,1).toString();
@@ -307,14 +318,18 @@ public class Inventario extends javax.swing.JInternalFrame {
             txtNombreProducto.setText(nombreProducto);
             txtCodigo.setText(codigo);
             txtExistencia.setText(existencia);
-            txtFechaCaducidad.setText(fechaCaducidad);
-
+                            
+                FechaCaducidad.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(fechaCaducidad));
+            } catch (ParseException e) {
+                JOptionPane.showMessageDialog(this, "error en tabla seleccionar"+e.getMessage());
+            }
         }
 
     }//GEN-LAST:event_tablaProductosMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.toedter.calendar.JDateChooser FechaCaducidad;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton jButton5;
@@ -329,7 +344,6 @@ public class Inventario extends javax.swing.JInternalFrame {
     private javax.swing.JTable tablaProductos;
     private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtExistencia;
-    private javax.swing.JTextField txtFechaCaducidad;
     private javax.swing.JTextField txtNombreProducto;
     // End of variables declaration//GEN-END:variables
 }
